@@ -92,13 +92,15 @@ The background is a soft gradient that shows the time of day of the displayed ho
 
 ### Day bar
 
-The day bar shows how much of the day has passed. It does not respond to touch.
+The day bar is a wide bar that shows how much of the day has passed. It does not respond to touch.
 
 - Midnight is at the top. The day goes down the bar to the next midnight at the bottom.
 - The track is a gradient of the sky over the day: night, dawn, day, golden hour, dusk, and night again (`DAY_STOPS` in `lib/time.ts`).
+- A notch on each edge marks each hour. Every third hour has a longer notch.
 - The part of the day that has passed is bright. The rest of the day is faded.
-- A glowing ☀️ (6 AM to 8 PM) or 🌙 (other hours) shows the displayed time. It follows the live, frozen, and Vancouver time, like the clock.
-- Marks show the moments of Vera's day: 🌙 12 AM (midnight), ☕ 9 AM (breakfast), 🥪 12 PM (lunch), and 😴 9 PM (sleep).
+- A straight, glowing yellow line across the bar shows the displayed time. It follows the live, frozen, and Vancouver time, like the clock.
+- Marks show the moments of Vera's day: 12 AM (midnight, at the top, with no emoji), ☕ 9 AM (breakfast), 🥪 12 PM (lunch), and 😴 9 PM (sleep).
+- The emoji marks are on top of the yellow line. The line goes behind them, so it never hides a mark. Do not put a circle or an emoji on the line.
 - The bar has `data-progress` (0 at midnight, 1 at the next midnight). The marks have `data-testid="day-mark-<hour>"`.
 
 ### Test hooks

@@ -283,11 +283,11 @@ test.describe("day bar", () => {
     return b.y + b.height / 2;
   };
   const markY = async (page: Page, hour: number) => {
-    const b = (await page.getByTestId(`day-mark-${hour}`).locator("span").first().boundingBox())!;
+    const b = (await page.getByTestId(`day-mark-${hour}`).boundingBox())!;
     return b.y + b.height / 2;
   };
 
-  test("sits on the right with midnight, ☕ 9 AM, 🥪 12 PM and 😴 9 PM in order", async ({ page }) => {
+  test("sits on the right with 12 AM, ☕ 9 AM, 🥪 12 PM and 😴 9 PM in order", async ({ page }) => {
     await open(page);
     const bar = (await page.getByTestId("day-bar").boundingBox())!;
     const clock = (await page.getByTestId("clock-face").boundingBox())!;
@@ -296,7 +296,7 @@ test.describe("day bar", () => {
     expect(bar.x).toBeGreaterThanOrEqual(calendar.x + calendar.width);
 
     const marks = [
-      [0, "🌙", "12 AM"],
+      [0, "", "12 AM"],
       [9, "☕", "9 AM"],
       [12, "🥪", "12 PM"],
       [21, "😴", "9 PM"],
@@ -304,11 +304,42 @@ test.describe("day bar", () => {
     let last = -Infinity;
     for (const [hour, emoji, label] of marks) {
       const mark = page.getByTestId(`day-mark-${hour}`);
-      await expect(mark).toContainText(emoji);
+      if (emoji) await expect(mark).toContainText(emoji);
+      else await expect(mark).toHaveText(label);
       await expect(mark).toContainText(label);
       const y = await markY(page, hour);
       expect(y).toBeGreaterThan(last);
       last = y;
+    }
+    // A notch for every hour between the two midnights.
+    await expect(page.getByTestId("day-notch")).toHaveCount(23);
+  });
+
+  test("the yellow line never hides an emoji", async ({ page }) => {
+    await open(page);
+    // Set exactly 9 AM, 12 PM and 9 PM: the mark must still be on top.
+    for (const [position, pm, mark] of [
+      [9, false, 9],
+      [12, true, 12],
+      [9, true, 21],
+    ] as const) {
+      await page.getByTestId(pm ? "ampm-pm" : "ampm-am").click();
+      await page.getByTestId("hand-hour").click();
+      await tapFace(page, position);
+      const bar = page.getByTestId("day-bar");
+      await expect(bar).toHaveAttribute("data-progress", (mark / 24).toFixed(3));
+      // Let the line slide into place, then look at what is on top.
+      await page.waitForTimeout(800);
+      const b = (await page.getByTestId(`day-mark-${mark}`).locator("span").first().boundingBox())!;
+      const onTop = await page.evaluate(
+        ([x, y]) =>
+          document
+            .elementFromPoint(x, y)
+            ?.closest("[data-testid^='day-mark-']")
+            ?.getAttribute("data-testid"),
+        [b.x + b.width / 2, b.y + b.height / 2],
+      );
+      expect(onTop).toBe(`day-mark-${mark}`);
     }
   });
 
@@ -316,15 +347,13 @@ test.describe("day bar", () => {
     await open(page); // 10:00 → between ☕ and 🥪, with the sun
     const bar = page.getByTestId("day-bar");
     await expect(bar).toHaveAttribute("data-progress", (10 / 24).toFixed(3));
-    await expect(page.getByTestId("day-bar-now")).toHaveText("☀️");
     const y = await nowY(page);
     expect(y).toBeGreaterThan(await markY(page, 9));
     expect(y).toBeLessThan(await markY(page, 12));
 
-    // PM moves it past 😴 9 PM, and the sun becomes the moon.
+    // PM moves it past 😴 9 PM.
     await page.getByTestId("ampm-pm").click();
     await expect(bar).toHaveAttribute("data-progress", (22 / 24).toFixed(3));
-    await expect(page.getByTestId("day-bar-now")).toHaveText("🌙");
     // The sun slides to its new place, so wait for it to arrive.
     const sleep = await markY(page, 21);
     await expect.poll(() => nowY(page)).toBeGreaterThan(sleep);
