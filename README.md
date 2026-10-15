@@ -13,6 +13,7 @@ or a colour, touch targets are large, and everything is reachable one-handed.
 - Opens on the current date and time and keeps ticking (⏱️). Touching anything
   freezes the time (📌) and the edit applies on top. 🔄 goes back to live.
 - Clock: tap the hour, then tap the minute. The active hand switches by itself.
+- A read-only digital time (☀️ 8:30 AM) sits above the analogue clock.
 - 🇨🇦 shows the same moment in Vancouver time; 🏠 switches back.
 - A day bar on the right shows how far through the day it is, from midnight
   at the top to midnight at the bottom, with hour notches, a yellow "now"

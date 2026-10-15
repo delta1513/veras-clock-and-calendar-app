@@ -2,7 +2,7 @@
 
 > A one-screen, picture-led app for picking a date and a time to show someone. It is built for Vera, a stroke survivor who uses one hand and cannot read sentences.
 
-The user taps a day on a large calendar, sets an analogue clock (tap the hour, then the minute), and chooses AM or PM. A wide day bar on the right shows how far through the day the time is: hour notches, a yellow line for now, and emoji marks for breakfast (9 AM), lunch (12 PM) and sleep (9 PM). The user then photographs the screen with a phone to send it. The 🇨🇦 button shows the same moment in Vancouver time, and 🔄 returns to the live current time. The UI has no sentences or dialogs; every control is an emoji, icon, or colour. It is a static site with no server, accounts, or data collection.
+The user taps a day on a large calendar, sets an analogue clock (tap the hour, then the minute), and chooses AM or PM. A read-only digital time above the analogue clock shows the same time. A wide day bar on the right shows how far through the day the time is: hour notches, a yellow line for now, and emoji marks for breakfast (9 AM), lunch (12 PM) and sleep (9 PM). The user then photographs the screen with a phone to send it. The 🇨🇦 button shows the same moment in Vancouver time, and 🔄 returns to the live current time. The UI has no sentences or dialogs; every control is an emoji, icon, or colour. It is a static site with no server, accounts, or data collection.
 
 ## Site
 

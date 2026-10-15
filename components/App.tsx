@@ -4,6 +4,8 @@ import { useState } from "react";
 import {
   VANCOUVER,
   addMonths,
+  digitalTime,
+  hour12,
   instantFromWall,
   phaseForHour,
   wallInZone,
@@ -130,30 +132,52 @@ export default function App() {
               </div>
             </div>
 
-            <div className="relative min-w-0 flex-1">
-              <Clock wall={wall} live={live} activeHand={activeHand} onSetHand={setHand} />
-              <div className="pointer-events-none absolute -top-1 -left-1">
-                {live ? (
-                  <span data-testid="live-badge" className="badge live-badge" aria-label="live">
-                    ⏱️
-                  </span>
-                ) : (
-                  <span data-testid="frozen-badge" className="badge animate-pop" aria-label="frozen">
-                    📌
-                  </span>
+            <div className="flex min-w-0 flex-1 flex-col gap-2 roomy:gap-3">
+              {/* Read-only digital time, for Vera and for whoever sees the photo. */}
+              <div
+                data-testid="digital-time"
+                data-live={live}
+                aria-label={digitalTime(wall)}
+                className="digital flex items-center justify-center gap-1.5 rounded-2xl px-2 py-1.5 roomy:gap-2.5 roomy:rounded-3xl roomy:py-2.5"
+              >
+                <span aria-hidden className="text-xl roomy:text-3xl">
+                  {pm ? "🌙" : "☀️"}
+                </span>
+                <span aria-hidden className="digital-digits text-[1.75rem] leading-none font-black tabular-nums roomy:text-5xl">
+                  {hour12(wall)}
+                  <span className={live ? "digital-colon-live" : ""}>:</span>
+                  {String(wall.minute).padStart(2, "0")}
+                </span>
+                <span aria-hidden className="digital-digits text-base leading-none font-extrabold roomy:text-2xl">
+                  {pm ? "PM" : "AM"}
+                </span>
+              </div>
+
+              <div className="relative">
+                <Clock wall={wall} live={live} activeHand={activeHand} onSetHand={setHand} />
+                <div className="pointer-events-none absolute -top-1 -left-1">
+                  {live ? (
+                    <span data-testid="live-badge" className="badge live-badge" aria-label="live">
+                      ⏱️
+                    </span>
+                  ) : (
+                    <span data-testid="frozen-badge" className="badge animate-pop" aria-label="frozen">
+                      📌
+                    </span>
+                  )}
+                </div>
+                {vancouver && (
+                  <div className="pointer-events-none absolute -top-1 -right-1">
+                    <span
+                      data-testid="canada-badge"
+                      className="badge canada-badge animate-pop"
+                      aria-label="Vancouver"
+                    >
+                      🇨🇦
+                    </span>
+                  </div>
                 )}
               </div>
-              {vancouver && (
-                <div className="pointer-events-none absolute -top-1 -right-1">
-                  <span
-                    data-testid="canada-badge"
-                    className="badge canada-badge animate-pop"
-                    aria-label="Vancouver"
-                  >
-                    🇨🇦
-                  </span>
-                </div>
-              )}
             </div>
           </section>
         </div>

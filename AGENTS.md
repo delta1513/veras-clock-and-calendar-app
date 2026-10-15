@@ -61,7 +61,7 @@ Before you finish, ask this question: "Can Vera use this feature with one hand, 
 The app is one screen. Nothing is in a menu. On a landscape tablet, the calendar and the clock are side by side. The parts are:
 
 1. The calendar card. It has big ◀ and ▶ month arrows, the month word and the year, single-letter weekdays, and big day buttons. Today has a blue ring. The selected day is orange.
-2. The clock card. The two hand buttons and the ☀️ AM / 🌙 PM switch are on the left, near the left thumb. The analogue clock is on the right.
+2. The clock card. The two hand buttons and the ☀️ AM / 🌙 PM switch are on the left, near the left thumb. The digital time and the analogue clock below it are on the right.
 3. The day bar. It is a tall bar on the right side of the screen, beside the calendar and the clock. See "Day bar" below.
 4. The action bar. It is fixed at the bottom of the screen. It has 🇨🇦 Vancouver (nearest the left thumb) and 🔄 reset (furthest from the thumb, so that it is not pressed by mistake).
 
@@ -78,6 +78,14 @@ The app is one screen. Nothing is in a menu. On a landscape tablet, the calendar
 - After the hour is set, the minute hand becomes active. After the minute is set, the hour hand becomes active. So the flow is always: tap the hour, then tap the minute.
 - A drag on the face also works, but it is not necessary.
 - ☀️ AM and 🌙 PM move the time by 12 hours on the same date.
+
+### Digital time
+
+- A digital time is above the analogue clock, for example `☀️ 8:30 AM` or `🌙 8:30 PM`. The person who gets Vera's photo can read it easily.
+- It is read-only. It does not respond to touch.
+- It shows the same time as the clock: live, frozen, or Vancouver. The ☀️ or 🌙 matches the AM/PM switch.
+- While the time is live, the colon blinks slowly. When the time is frozen, the colon is still.
+- It has `data-testid="digital-time"`, `data-live`, and an `aria-label` such as `8:30 PM`.
 
 ### Vancouver
 

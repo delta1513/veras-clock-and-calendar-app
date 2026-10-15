@@ -277,6 +277,7 @@ button:focus-visible {
   .stars,
   .live-badge,
   .seconds-pulse,
+  .digital-colon-live,
   .animate-pop {
     animation: none;
   }
@@ -331,4 +332,29 @@ button:focus-visible {
     0 0 0 1.5px #f59f00,
     0 0 14px 4px rgb(255 205 60 / 0.8);
   transition: top 0.6s ease;
+}
+
+/* ---------- digital time ---------- */
+
+.digital {
+  background: linear-gradient(180deg, #3d2c2e, #2a1f24);
+  box-shadow:
+    0 0 0 3px #f1e1cb,
+    0 4px 14px -6px rgb(30 15 5 / 0.6),
+    0 2px 10px rgb(0 0 0 / 0.35) inset;
+}
+
+.digital-digits {
+  color: #ffd8a8;
+  text-shadow: 0 0 10px rgb(255 190 110 / 0.55);
+}
+
+.digital-colon-live {
+  animation: blink 2s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
 }

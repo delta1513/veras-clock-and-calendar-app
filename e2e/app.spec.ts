@@ -365,3 +365,32 @@ test.describe("day bar", () => {
     await expect(page.getByTestId("day-bar")).toHaveAttribute("data-progress", (16 / 24).toFixed(3));
   });
 });
+
+test("digital time above the clock follows the shown time", async ({ page }) => {
+  await open(page); // 10:00 AM in Sydney
+  const digital = page.getByTestId("digital-time");
+  const clock = (await page.getByTestId("clock-face").boundingBox())!;
+  const box = (await digital.boundingBox())!;
+  expect(box.y + box.height).toBeLessThanOrEqual(clock.y);
+  await expect(digital).toHaveText("☀️10:00AM");
+  await expect(digital).toHaveAttribute("data-live", "true");
+
+  await page.clock.runFor(60_000);
+  await expect(digital).toHaveText("☀️10:01AM");
+
+  // Editing freezes it and it shows the edit.
+  await tapFace(page, 3);
+  await tapFace(page, 6);
+  await page.getByTestId("ampm-pm").click();
+  await expect(digital).toHaveText("🌙3:30PM");
+  await expect(digital).toHaveAttribute("data-live", "false");
+  await expect(digital).toHaveAttribute("aria-label", "3:30 PM");
+
+  // 3:30 PM in Sydney is 9:30 PM the day before in Vancouver.
+  await page.getByTestId("btn-canada").click();
+  await expect(digital).toHaveText("🌙9:30PM");
+
+  // It is read-only: tapping it changes nothing.
+  await digital.click();
+  await expect(app(page)).toHaveAttribute("data-time", "2026-10-14T21:30");
+});
