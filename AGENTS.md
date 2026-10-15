@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 Vera's Clock is a date and time picker for one person: Vera. It is a static Next.js site. It has no server and no API calls.
 
-Vera has trouble writing. She uses this app to tell a person a date and a time. She picks a day on a calendar and a time on an analogue clock. Then she presses one button. The app makes a picture of that date and time and opens the share sheet of her phone. She sends the picture to a family member, for example in Canada.
+Vera has trouble writing. She uses this app to tell a person a date and a time. She picks a day on a calendar and a time on an analogue clock. She uses the app on her iPad. Then she takes a photo of the iPad screen with her phone. She sends the photo to a family member, for example in Canada. The app does not make or send the picture. Do not add a send or screen capture feature.
 
 ## Who Vera is
 
@@ -62,7 +62,7 @@ The app is one screen. Nothing is in a menu. From the top to the bottom:
 
 1. The calendar card. It has big ◀ and ▶ month arrows, the month word and the year, single-letter weekdays, and big day buttons. Today has a blue ring. The selected day is orange.
 2. The clock card. The two hand buttons and the ☀️ AM / 🌙 PM switch are on the left, near the left thumb. The analogue clock is on the right.
-3. The action bar. It is fixed at the bottom of the screen. It has 📸 send (nearest the left thumb), 🇨🇦 Vancouver, and 🔄 reset (furthest from the thumb, so that it is not pressed by mistake).
+3. The action bar. It is fixed at the bottom of the screen. It has 🇨🇦 Vancouver (nearest the left thumb) and 🔄 reset (furthest from the thumb, so that it is not pressed by mistake).
 
 ### Live and frozen
 
@@ -89,10 +89,6 @@ The app is one screen. Nothing is in a menu. From the top to the bottom:
 
 The background is a soft gradient that shows the time of day of the displayed hour: night, dawn, morning, midday, golden hour, and dusk. 8 PM is dusk. Night and dusk have stars. A change of phase cross-fades. The root element has `data-phase`.
 
-### Send
-
-📸 draws a picture on a canvas (`lib/card.ts`): a calendar page (month, day number, weekday, year), a clock face, ☀️ or 🌙, the digital time (for example "8:30 PM") for the person who gets it, and 🇨🇦 Vancouver or 🏠. The background is the same time-of-day gradient. The app shares the PNG with `navigator.share`. If the browser cannot share files, the app downloads the PNG. If Vera cancels the share sheet, nothing happens. After a send, a ✅ (shared) or 📥 (downloaded) flies across the screen.
-
 ### Test hooks
 
 The root element (`data-testid="app"`) has `data-time` (wall time, for example `2026-10-15T20:30`), `data-zone`, `data-live`, `data-phase`, and `data-active-hand`. Each control has a `data-testid`.
@@ -100,11 +96,10 @@ The root element (`data-testid="app"`) has `data-time` (wall time, for example `
 ## Project layout
 
 - `app/`: Next.js entry files (`page.tsx`, `layout.tsx`, `globals.css`, `icon.svg`).
-- `components/App.tsx`: the screen and all state (live or frozen, zone, active hand, send).
+- `components/App.tsx`: the screen and all state (live or frozen, zone, active hand).
 - `components/Calendar.tsx`, `components/Clock.tsx`, `components/Sky.tsx`: the calendar, the clock face, and the background.
 - `components/icons.tsx`: the arrow and hand icons.
 - `lib/time.ts`: zone maths, date helpers, and the time-of-day phases and colours.
-- `lib/card.ts`: draws the picture and shares or downloads it.
 - `lib/colors.ts`: the hand colours.
 - `lib/useNow.ts`: the current time and the local zone, as React hooks.
 - `e2e/app.spec.ts`: Playwright tests of the app. They fix the clock with `page.clock` and the zone with `timezoneId`.

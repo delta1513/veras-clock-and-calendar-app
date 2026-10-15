@@ -10,7 +10,7 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   title: "Vera's Clock",
-  description: "Pick a day and a time, then send it as a picture.",
+  description: "Pick a day and a time to show someone.",
 };
 
 export const viewport: Viewport = {

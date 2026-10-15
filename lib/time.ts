@@ -184,7 +184,7 @@ export function phaseForHour(hour: number): Phase {
   return "night";
 }
 
-/** Gradient stops (top → bottom) for each phase, shared by screen and picture. */
+/** Gradient stops (top → bottom) for each phase, used by the background. */
 export const PHASE_COLORS: Record<Phase, [string, string, string]> = {
   night: ["#1b1740", "#2e2459", "#4a2f63"],
   dawn: ["#b8a6e0", "#f3b9c6", "#ffd3a8"],

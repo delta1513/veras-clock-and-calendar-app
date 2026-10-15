@@ -2,6 +2,8 @@
 
 /* iPad portrait and up, with real vertical room (not a phone in landscape). */
 @custom-variant roomy (@media (min-width: 700px) and (min-height: 600px));
+/* A landscape tablet: calendar and clock side by side, so the bar covers neither. */
+@custom-variant wide (@media (min-width: 900px) and (orientation: landscape));
 
 @theme {
   --font-sans: var(--font-nunito), ui-rounded, "Nunito", "Segoe UI Rounded",
@@ -240,11 +242,6 @@ button:focus-visible {
   place-items: center;
 }
 
-.action-send {
-  background: linear-gradient(180deg, #69db7c, #37b24d);
-  box-shadow: 0 4px 0 0 #2b8a3e;
-}
-
 .action-canada {
   background: #ffe3e3;
   box-shadow: 0 4px 0 0 #f1a9a9;
@@ -258,32 +255,6 @@ button:focus-visible {
 .action-reset {
   background: #e7f5ff;
   box-shadow: 0 4px 0 0 #a5d8ff;
-}
-
-/* ---------- send result ---------- */
-
-.send-result span {
-  animation: fly 1.4s ease-in-out forwards;
-  filter: drop-shadow(0 8px 20px rgb(0 0 0 / 0.3));
-}
-
-@keyframes fly {
-  0% {
-    transform: translateY(40vh) scale(0.4);
-    opacity: 0;
-  }
-  25% {
-    transform: translateY(0) scale(1.15);
-    opacity: 1;
-  }
-  70% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-40vh) scale(0.6);
-    opacity: 0;
-  }
 }
 
 @keyframes pop {
@@ -308,20 +279,5 @@ button:focus-visible {
   .seconds-pulse,
   .animate-pop {
     animation: none;
-  }
-  .send-result span {
-    animation-duration: 1.4s;
-    animation-name: fade;
-  }
-}
-
-@keyframes fade {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  30%,
-  70% {
-    opacity: 1;
   }
 }

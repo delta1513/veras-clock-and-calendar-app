@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   VANCOUVER,
   addMonths,
@@ -10,14 +10,11 @@ import {
   wallKey,
   type Wall,
 } from "@/lib/time";
-import { canvasToPngFile, drawCard, shareOrDownload } from "@/lib/card";
 import { useLocalZone, useNow } from "@/lib/useNow";
 import Calendar from "./Calendar";
 import Clock, { type Hand } from "./Clock";
 import { HandIcon } from "./icons";
 import Sky from "./Sky";
-
-type Result = { id: number; kind: "sent" | "saved" } | null;
 
 export default function App() {
   const now = useNow();
@@ -27,8 +24,6 @@ export default function App() {
   const [frozen, setFrozen] = useState<number | null>(null);
   const [vancouver, setVancouver] = useState(false);
   const [activeHand, setActiveHand] = useState<Hand>("hour");
-  const [result, setResult] = useState<Result>(null);
-  const resultId = useRef(0);
 
   if (now === null || local === null) {
     // Static build: nothing to show until the browser knows the time.
@@ -73,20 +68,6 @@ export default function App() {
     setActiveHand("hour");
   };
 
-  const send = async () => {
-    const canvas = document.createElement("canvas");
-    drawCard(canvas, {
-      wall: { ...wall, second: 0 },
-      vancouver,
-      fontFamily: getComputedStyle(document.body).fontFamily,
-    });
-    const file = canvasToPngFile(canvas, `vera-${wallKey(wall).replace(":", "")}.png`);
-    const outcome = await shareOrDownload(file);
-    if (outcome === "cancelled") return;
-    resultId.current += 1;
-    setResult({ id: resultId.current, kind: outcome === "shared" ? "sent" : "saved" });
-  };
-
   const pm = wall.hour >= 12;
 
   return (
@@ -101,7 +82,7 @@ export default function App() {
     >
       <Sky phase={phase} />
 
-      <main className="relative mx-auto flex max-w-md flex-col gap-3 px-3 pt-3 pb-32 roomy:max-w-lg roomy:gap-4 roomy:pt-6">
+      <main className="relative mx-auto flex max-w-md flex-col gap-3 px-3 pt-3 pb-32 roomy:max-w-lg roomy:gap-4 roomy:pt-6 wide:max-w-5xl wide:flex-row wide:items-stretch">
         <Calendar
           wall={wall}
           today={todayWall}
@@ -109,7 +90,7 @@ export default function App() {
           onPickDay={(day) => edit((w) => ({ ...w, day }))}
         />
 
-        <section className="card flex items-center gap-3 p-3 roomy:gap-4 roomy:p-4">
+        <section className="card flex items-center gap-3 p-3 roomy:gap-4 roomy:p-4 wide:flex-1">
           {/* Controls on the left, nearest the left thumb. */}
           <div className="flex w-[7.25rem] shrink-0 flex-col gap-2 roomy:w-36">
             {(["hour", "minute"] as const).map((hand) => (
@@ -179,17 +160,8 @@ export default function App() {
         data-testid="action-bar"
         className="fixed inset-x-0 bottom-0 z-20 px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
       >
-        {/* Send sits nearest the left thumb; reset is furthest away. */}
-        <div className="action-bar mx-auto grid max-w-md grid-cols-[2fr_1fr_1fr] gap-2 rounded-[1.75rem] p-2 roomy:max-w-lg">
-          <button
-            type="button"
-            data-testid="btn-send"
-            aria-label="send"
-            onClick={send}
-            className="action-btn action-send h-[4.5rem] rounded-3xl text-4xl"
-          >
-            📸
-          </button>
+        {/* Reset wipes Vera's edits, so it sits furthest from the left thumb. */}
+        <div className="action-bar mx-auto grid max-w-md grid-cols-2 gap-2 rounded-[1.75rem] p-2 roomy:max-w-lg wide:max-w-5xl">
           <button
             type="button"
             data-testid="btn-canada"
@@ -213,18 +185,6 @@ export default function App() {
         </div>
       </nav>
 
-      {result && (
-        <div
-          key={result.id}
-          data-testid="send-result"
-          data-kind={result.kind}
-          aria-hidden
-          className="send-result pointer-events-none fixed inset-0 z-30 grid place-items-center"
-          onAnimationEnd={() => setResult(null)}
-        >
-          <span className="text-[7rem]">{result.kind === "sent" ? "✅" : "📥"}</span>
-        </div>
-      )}
     </div>
   );
 }

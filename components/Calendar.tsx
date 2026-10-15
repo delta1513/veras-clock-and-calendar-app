@@ -24,7 +24,7 @@ export default function Calendar({ wall, today, onMonth, onPickDay }: Props) {
   while (cells.length % 7) cells.push(null);
 
   return (
-    <section data-testid="calendar" className="card p-3 roomy:p-4">
+    <section data-testid="calendar" className="card p-3 roomy:p-4 wide:flex-1">
       <div className="flex items-center gap-2">
         <button
           type="button"

@@ -1,11 +1,10 @@
 # Vera's Clock
 
-Pick a day and a time, then send it as a picture.
+Pick a day and a time to show someone.
 
 Vera has trouble writing. This app lets her choose a date on a big calendar, a
-time on an analogue clock and AM or PM, then press 📸. The app draws a picture
-of that date and time — a calendar page, a clock face, ☀️ or 🌙, and the
-digital time — and opens the phone's share sheet so she can send it to family.
+time on an analogue clock and AM or PM on her iPad. She then takes a photo of
+the iPad screen with her phone and sends it to family.
 
 It is built for a user who cannot read prose: there are no sentences,
 instructions, or browser dialogs anywhere. Every control is an emoji, an icon,

@@ -241,79 +241,6 @@ test("🔄 returns to live local time", async ({ page }) => {
   await expect(app(page)).toHaveAttribute("data-time", "2026-10-15T10:31");
 });
 
-test.describe("📸 send", () => {
-  test("shares one PNG through the share sheet", async ({ page }) => {
-    await page.addInitScript(() => {
-      const w = window as unknown as { __shared: unknown[] };
-      w.__shared = [];
-      Object.defineProperty(navigator, "canShare", {
-        configurable: true,
-        value: (data: ShareData) => !!data.files?.length,
-      });
-      Object.defineProperty(navigator, "share", {
-        configurable: true,
-        value: async (data: ShareData) => {
-          for (const f of data.files ?? []) {
-            const bytes = new Uint8Array(await f.arrayBuffer());
-            w.__shared.push({
-              name: f.name,
-              type: f.type,
-              size: f.size,
-              magic: Array.from(bytes.slice(1, 4)).map((b) => String.fromCharCode(b)).join(""),
-              count: data.files!.length,
-            });
-          }
-        },
-      });
-    });
-    await open(page, EVENING);
-    await page.getByTestId("btn-send").click();
-
-    await expect
-      .poll(() => page.evaluate(() => (window as unknown as { __shared: unknown[] }).__shared.length))
-      .toBe(1);
-    const [shared] = (await page.evaluate(
-      () => (window as unknown as { __shared: unknown[] }).__shared,
-    )) as { name: string; type: string; size: number; magic: string; count: number }[];
-    expect(shared.count).toBe(1);
-    expect(shared.type).toBe("image/png");
-    expect(shared.magic).toBe("PNG");
-    expect(shared.name).toMatch(/\.png$/);
-    expect(shared.size).toBeGreaterThan(30_000);
-    await expect(page.getByTestId("send-result")).toHaveAttribute("data-kind", "sent");
-  });
-
-  test("downloads the PNG when sharing files is not possible", async ({ page }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "canShare", { configurable: true, value: undefined });
-    });
-    await open(page);
-    const download = page.waitForEvent("download");
-    await page.getByTestId("btn-send").click();
-    expect((await download).suggestedFilename()).toBe("vera-2026-10-15T1000.png");
-    await expect(page.getByTestId("send-result")).toHaveAttribute("data-kind", "saved");
-  });
-
-  test("a cancelled share does nothing", async ({ page }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "canShare", { configurable: true, value: () => true });
-      Object.defineProperty(navigator, "share", {
-        configurable: true,
-        value: async () => {
-          throw new DOMException("cancelled", "AbortError");
-        },
-      });
-    });
-    await open(page);
-    let downloaded = false;
-    page.on("download", () => (downloaded = true));
-    await page.getByTestId("btn-send").click();
-    await page.clock.runFor(2000);
-    await expect(page.getByTestId("send-result")).toHaveCount(0);
-    expect(downloaded).toBe(false);
-  });
-});
-
 test("big buttons, no sideways scroll, nothing hidden under the bar", async ({ page }) => {
   await open(page);
   for (const button of await page.getByRole("button").all()) {
@@ -322,7 +249,7 @@ test("big buttons, no sideways scroll, nothing hidden under the bar", async ({ p
     expect(box.width, `${id} width`).toBeGreaterThanOrEqual(44);
     expect(box.height, `${id} height`).toBeGreaterThanOrEqual(44);
   }
-  for (const id of ["btn-send", "btn-canada", "btn-reset"]) {
+  for (const id of ["btn-canada", "btn-reset"]) {
     const box = (await page.getByTestId(id).boundingBox())!;
     expect(box.height).toBeGreaterThanOrEqual(56);
   }
@@ -335,6 +262,17 @@ test("big buttons, no sideways scroll, nothing hidden under the bar", async ({ p
   // Scrolled to the bottom, the AM/PM switch sits fully above the action bar.
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   const pm = (await page.getByTestId("ampm-pm").boundingBox())!;
-  const bar = (await page.getByTestId("btn-send").boundingBox())!;
+  const bar = (await page.getByTestId("btn-canada").boundingBox())!;
   expect(pm.y + pm.height).toBeLessThan(bar.y - 8);
+});
+
+test("iPad landscape: the bar covers neither the calendar nor the clock", async ({ page }) => {
+  // Vera photographs her iPad screen, so everything must be in view at once.
+  await page.setViewportSize({ width: 1080, height: 810 });
+  await open(page);
+  const bar = (await page.getByTestId("action-bar").boundingBox())!;
+  for (const id of ["calendar", "clock-face", "ampm-pm"]) {
+    const box = (await page.getByTestId(id).boundingBox())!;
+    expect(box.y + box.height, id).toBeLessThan(bar.y);
+  }
 });
