@@ -24,7 +24,7 @@ export default function Calendar({ wall, today, onMonth, onPickDay }: Props) {
   while (cells.length % 7) cells.push(null);
 
   return (
-    <section data-testid="calendar" className="card p-3 roomy:p-4 wide:flex-1">
+    <section data-testid="calendar" className="card px-2 py-3 roomy:p-4 wide:flex wide:flex-1 wide:flex-col wide:justify-center">
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -64,7 +64,7 @@ export default function Calendar({ wall, today, onMonth, onPickDay }: Props) {
         ))}
       </div>
 
-      <div className="mt-0.5 grid grid-cols-7 gap-1">
+      <div className="mt-0.5 grid grid-cols-7 gap-x-0.5 gap-y-1 roomy:gap-1">
         {cells.map((day, i) => {
           if (day === null) return <div key={`e${i}`} />;
           const selected = day === wall.day;

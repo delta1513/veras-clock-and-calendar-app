@@ -281,3 +281,40 @@ button:focus-visible {
     animation: none;
   }
 }
+
+/* ---------- day bar ---------- */
+
+.day-bar {
+  border-radius: 999px;
+}
+
+.day-track {
+  box-shadow:
+    0 0 0 3px #fff8ec,
+    0 2px 10px -2px rgb(30 15 5 / 0.35) inset;
+}
+
+.day-rest {
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
+  transition: top 0.6s ease;
+}
+
+.day-chip {
+  background: #fffaf2;
+  box-shadow:
+    0 0 0 2px #f0dcc2,
+    0 3px 8px -3px rgb(30 15 5 / 0.4);
+}
+
+.day-label {
+  background: #fffaf2;
+  color: var(--ink);
+}
+
+.day-now {
+  background: radial-gradient(circle, #fffdf6 55%, #ffe8a3 100%);
+  box-shadow:
+    0 0 0 3px #f59f00,
+    0 0 18px 6px rgb(255 200 80 / 0.75);
+  transition: top 0.6s ease;
+}

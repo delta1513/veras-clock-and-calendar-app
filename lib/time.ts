@@ -198,3 +198,25 @@ export const PHASE_COLORS: Record<Phase, [string, string, string]> = {
 export function isDark(phase: Phase): boolean {
   return phase === "night" || phase === "dusk";
 }
+
+/** How far through the day a wall time is, from 0 (midnight) to 1. */
+export function dayProgress(w: Wall): number {
+  return (w.hour * 60 + w.minute) / (24 * 60);
+}
+
+/** The sky over a whole day, midnight to midnight, as [hour, colour] stops. */
+export const DAY_STOPS: [number, string][] = [
+  [0, "#1b1740"],
+  [4.5, "#2e2459"],
+  [6, "#b8a6e0"],
+  [7, "#ffd3a8"],
+  [9, "#a9d8f5"],
+  [12, "#8fcdf2"],
+  [15, "#fde7b0"],
+  [17, "#f7b267"],
+  [18.5, "#f4845f"],
+  [19.5, "#c0607a"],
+  [20.5, "#6a3d82"],
+  [22, "#3b2c6b"],
+  [24, "#1b1740"],
+];

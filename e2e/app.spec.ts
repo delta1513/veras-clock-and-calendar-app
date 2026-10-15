@@ -276,3 +276,63 @@ test("iPad landscape: the bar covers neither the calendar nor the clock", async 
     expect(box.y + box.height, id).toBeLessThan(bar.y);
   }
 });
+
+test.describe("day bar", () => {
+  const nowY = async (page: Page) => {
+    const b = (await page.getByTestId("day-bar-now").boundingBox())!;
+    return b.y + b.height / 2;
+  };
+  const markY = async (page: Page, hour: number) => {
+    const b = (await page.getByTestId(`day-mark-${hour}`).locator("span").first().boundingBox())!;
+    return b.y + b.height / 2;
+  };
+
+  test("sits on the right with midnight, ☕ 9 AM, 🥪 12 PM and 😴 9 PM in order", async ({ page }) => {
+    await open(page);
+    const bar = (await page.getByTestId("day-bar").boundingBox())!;
+    const clock = (await page.getByTestId("clock-face").boundingBox())!;
+    const calendar = (await page.getByTestId("calendar").boundingBox())!;
+    expect(bar.x).toBeGreaterThanOrEqual(clock.x + clock.width);
+    expect(bar.x).toBeGreaterThanOrEqual(calendar.x + calendar.width);
+
+    const marks = [
+      [0, "🌙", "12 AM"],
+      [9, "☕", "9 AM"],
+      [12, "🥪", "12 PM"],
+      [21, "😴", "9 PM"],
+    ] as const;
+    let last = -Infinity;
+    for (const [hour, emoji, label] of marks) {
+      const mark = page.getByTestId(`day-mark-${hour}`);
+      await expect(mark).toContainText(emoji);
+      await expect(mark).toContainText(label);
+      const y = await markY(page, hour);
+      expect(y).toBeGreaterThan(last);
+      last = y;
+    }
+  });
+
+  test("shows how far through the day the shown time is", async ({ page }) => {
+    await open(page); // 10:00 → between ☕ and 🥪, with the sun
+    const bar = page.getByTestId("day-bar");
+    await expect(bar).toHaveAttribute("data-progress", (10 / 24).toFixed(3));
+    await expect(page.getByTestId("day-bar-now")).toHaveText("☀️");
+    const y = await nowY(page);
+    expect(y).toBeGreaterThan(await markY(page, 9));
+    expect(y).toBeLessThan(await markY(page, 12));
+
+    // PM moves it past 😴 9 PM, and the sun becomes the moon.
+    await page.getByTestId("ampm-pm").click();
+    await expect(bar).toHaveAttribute("data-progress", (22 / 24).toFixed(3));
+    await expect(page.getByTestId("day-bar-now")).toHaveText("🌙");
+    // The sun slides to its new place, so wait for it to arrive.
+    const sleep = await markY(page, 21);
+    await expect.poll(() => nowY(page)).toBeGreaterThan(sleep);
+  });
+
+  test("follows Vancouver time", async ({ page }) => {
+    await open(page); // Sydney 10:00 = Vancouver 16:00
+    await page.getByTestId("btn-canada").click();
+    await expect(page.getByTestId("day-bar")).toHaveAttribute("data-progress", (16 / 24).toFixed(3));
+  });
+});

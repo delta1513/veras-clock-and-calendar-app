@@ -14,6 +14,8 @@ or a colour, touch targets are large, and everything is reachable one-handed.
   freezes the time (📌) and the edit applies on top. 🔄 goes back to live.
 - Clock: tap the hour, then tap the minute. The active hand switches by itself.
 - 🇨🇦 shows the same moment in Vancouver time; 🏠 switches back.
+- A day bar on the right shows how far through the day it is, from midnight
+  at the top to midnight at the bottom, with ☕ 9 AM, 🥪 12 PM and 😴 9 PM.
 - The background follows the time of day shown: dawn, morning, midday, golden
   hour, dusk, and a starry night.
 
