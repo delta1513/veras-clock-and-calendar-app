@@ -1,9 +1,25 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-nunito",
+});
+
 export const metadata: Metadata = {
-  title: "NextJS + Cloudflare Workers template",
-  description: "A template for deploying static NextJS sites to Cloudflare Workers.",
+  title: "Vera's Clock",
+  description: "Pick a day and a time, then send it as a picture.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#2e2459",
 };
 
 export default function RootLayout({
@@ -12,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={nunito.variable}>
+      <body className="min-h-dvh">{children}</body>
     </html>
   );
 }
