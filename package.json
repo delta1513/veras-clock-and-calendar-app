@@ -1,13 +1,14 @@
 {
-  "name": "agentic-cloudflare-static-site-template",
+  "name": "veras-clock-and-calendar-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "lint": "eslint",
-    "preview": "next build && wrangler dev",
-    "deploy": "wrangler deploy"
+    "test:e2e": "playwright test",
+    "preview": "next build && serve out -l 3000",
+    "cf:preview": "next build && wrangler dev"
   },
   "dependencies": {
     "next": "16.3.5",
@@ -15,11 +16,15 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
+    "serve": "^14.2.6",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5",
     "wrangler": "^4.143.0"
   }
