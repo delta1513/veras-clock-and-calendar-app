@@ -59,11 +59,9 @@ export default function App() {
   const setPm = (pm: boolean) =>
     edit((w) => ({ ...w, hour: (w.hour % 12) + (pm ? 12 : 0) }));
 
-  const toggleZone = () => {
-    // Freeze the same instant, then show it in the other zone.
-    setFrozen(Math.floor(instant / 60_000) * 60_000);
-    setVancouver((v) => !v);
-  };
+  // The same instant shows in the other zone. A live clock keeps ticking; only
+  // setting the calendar, the clock or AM/PM freezes it.
+  const toggleZone = () => setVancouver((v) => !v);
 
   const reset = () => {
     setFrozen(null);

@@ -183,13 +183,30 @@ test("🇨🇦 shows the same moment in Vancouver, 🇦🇺 brings it back", asy
   await expect(page.getByTestId("day-2026-10-14")).toHaveAttribute("data-selected", "true");
   await expect(page.getByTestId("ampm-pm")).toHaveAttribute("aria-pressed", "true");
   await expect(app(page)).toHaveAttribute("data-phase", "golden");
-  await expect(page.getByTestId("frozen-badge")).toBeVisible();
+
+  // Switching zone does not freeze: Vancouver keeps ticking.
+  await expect(app(page)).toHaveAttribute("data-live", "true");
+  await expect(page.getByTestId("live-badge")).toBeVisible();
+  await expect(page.getByTestId("frozen-badge")).toHaveCount(0);
+  await page.clock.fastForward("05:00");
+  await expect(app(page)).toHaveAttribute("data-time", "2026-10-14T16:05");
 
   await canada.click();
-  await expect(app(page)).toHaveAttribute("data-time", "2026-10-15T10:00");
+  await expect(app(page)).toHaveAttribute("data-live", "true");
+  await expect(app(page)).toHaveAttribute("data-time", "2026-10-15T10:05");
   await expect(app(page)).toHaveAttribute("data-zone", LOCAL);
   await expect(page.getByTestId("canada-badge")).toHaveCount(0);
   await expect(canada).toHaveText("🇨🇦");
+});
+
+test("a frozen time stays frozen when the zone changes", async ({ page }) => {
+  await open(page);
+  await page.getByTestId("ampm-pm").click(); // Sydney 10 PM, frozen
+  await page.getByTestId("btn-canada").click();
+  await expect(app(page)).toHaveAttribute("data-live", "false");
+  await expect(page.getByTestId("frozen-badge")).toBeVisible();
+  await page.clock.fastForward("05:00");
+  await expect(app(page)).toHaveAttribute("data-time", "2026-10-15T04:00");
 });
 
 test("edits in Vancouver are Vancouver wall time", async ({ page }) => {
