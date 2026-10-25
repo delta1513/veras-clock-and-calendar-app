@@ -69,7 +69,7 @@ The app is one screen. Nothing is in a menu. On a landscape tablet, the calendar
 
 - When the app opens, it shows the current date and time. The clock ticks. A thin seconds hand pulses, and a ⏱️ badge glows.
 - When Vera touches the calendar, the clock face, the AM/PM switch, or 🇨🇦, the time freezes at what is on the screen. Her change applies to that time. A 📌 badge shows the frozen state.
-- 🔄 returns to live current time in the local zone.
+- 🔄 returns to live current time in Sydney time.
 
 ### The clock
 
@@ -89,8 +89,8 @@ The app is one screen. Nothing is in a menu. On a landscape tablet, the calendar
 
 ### Vancouver
 
-- The chosen moment is one absolute instant. The screen shows it in the local zone of the device or in `America/Vancouver`.
-- 🇨🇦 shows the same instant in Vancouver time: the calendar, the clock, AM/PM, and the background all change. A 🇨🇦 badge shows on the clock. The button then shows 🏠. 🏠 converts back to the local zone.
+- The chosen moment is one absolute instant. The screen shows it in `Australia/Sydney` (AEST in winter, AEDT in summer) or in `America/Vancouver`. Sydney is the home zone for everyone. The app ignores the zone of the device.
+- 🇨🇦 shows the same instant in Vancouver time: the calendar, the clock, AM/PM, and the background all change. A 🇨🇦 badge shows on the clock. The button then shows 🇦🇺. 🇦🇺 converts back to Sydney time.
 - Changes that Vera makes in Vancouver mode are in Vancouver wall time.
 - `lib/time.ts` does all zone maths with `Intl.DateTimeFormat`. It handles daylight saving time. `e2e/time.spec.ts` tests it.
 
@@ -123,7 +123,7 @@ The root element (`data-testid="app"`) has `data-time` (wall time, for example `
 - `components/icons.tsx`: the arrow and hand icons.
 - `lib/time.ts`: zone maths, date helpers, and the time-of-day phases and colours.
 - `lib/colors.ts`: the hand colours.
-- `lib/useNow.ts`: the current time and the local zone, as React hooks.
+- `lib/useNow.ts`: the current time, as a React hook.
 - `e2e/app.spec.ts`: Playwright tests of the app. They fix the clock with `page.clock` and the zone with `timezoneId`.
 - `e2e/time.spec.ts`: unit tests of `lib/time.ts`.
 - `playwright.config.ts`: builds the site, serves `out/` on port 3100, and tests on a Pixel 7 viewport.

@@ -14,7 +14,8 @@ or a colour, touch targets are large, and everything is reachable one-handed.
   freezes the time (📌) and the edit applies on top. 🔄 goes back to live.
 - Clock: tap the hour, then tap the minute. The active hand switches by itself.
 - A read-only digital time (☀️ 8:30 AM) sits above the analogue clock.
-- 🇨🇦 shows the same moment in Vancouver time; 🏠 switches back.
+- Everyone sees Sydney time (AEST/AEDT) by default, wherever the device is.
+  🇨🇦 shows the same moment in Vancouver time; 🇦🇺 switches back.
 - A day bar on the right shows how far through the day it is, from midnight
   at the top to midnight at the bottom, with hour notches, a yellow "now"
   line, and ☕ 9 AM, 🥪 12 PM and 😴 9 PM.

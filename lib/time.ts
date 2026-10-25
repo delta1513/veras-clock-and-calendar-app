@@ -3,9 +3,11 @@
  *
  * The chosen moment is always kept as an absolute instant (epoch ms). What the
  * screen shows is that instant's wall-clock time in the display zone — either
- * the device's own zone or Vancouver.
+ * Sydney (the home zone, whatever zone the device is in) or Vancouver.
  */
 
+/** Home zone for everyone: AEST in winter, AEDT in summer, handled by Intl. */
+export const SYDNEY = "Australia/Sydney";
 export const VANCOUVER = "America/Vancouver";
 
 /** Wall-clock parts. `month` is 1–12, `hour` is 0–23. */
@@ -63,11 +65,6 @@ function formatterFor(zone: string): Intl.DateTimeFormat {
     formatters.set(zone, f);
   }
   return f;
-}
-
-/** The device's own IANA zone, e.g. "Australia/Sydney". */
-export function localZone(): string {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 }
 
 /** Wall-clock parts of an instant in a zone. */

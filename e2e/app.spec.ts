@@ -1,9 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
 
 /*
- * Vera's device is pinned to Sydney, far from Vancouver, so the 🇨🇦 button
- * always changes the date as well as the time. The clock is faked and paused.
+ * The app always starts in Sydney time. The device is pinned to London, to
+ * prove that the device zone is ignored. Sydney is far from Vancouver, so the
+ * 🇨🇦 button always changes the date as well as the time. The clock is faked
+ * and paused.
  */
+const DEVICE = "Europe/London";
 const LOCAL = "Australia/Sydney";
 const VANCOUVER = "America/Vancouver";
 // 2026-10-15 10:00 in Sydney (AEDT, UTC+11) = 2026-10-14 16:00 in Vancouver.
@@ -11,7 +14,7 @@ const MORNING = new Date("2026-10-14T23:00:00Z");
 // 2026-10-15 20:00 in Sydney.
 const EVENING = new Date("2026-10-15T09:00:00Z");
 
-test.use({ timezoneId: LOCAL });
+test.use({ timezoneId: DEVICE });
 
 // Vera cannot read a dialog, so any dialog fails the test.
 let dialogs: string[] = [];
@@ -164,7 +167,7 @@ test("AM/PM flips 12 hours on the same date", async ({ page }) => {
   await expect(app(page)).toHaveAttribute("data-time", "2026-10-15T10:00");
 });
 
-test("🇨🇦 shows the same moment in Vancouver, 🏠 brings it back", async ({ page }) => {
+test("🇨🇦 shows the same moment in Vancouver, 🇦🇺 brings it back", async ({ page }) => {
   await open(page);
   const canada = page.getByTestId("btn-canada");
   await expect(canada).toHaveText("🇨🇦");
@@ -176,7 +179,7 @@ test("🇨🇦 shows the same moment in Vancouver, 🏠 brings it back", async (
   await expect(app(page)).toHaveAttribute("data-time", expected);
   await expect(app(page)).toHaveAttribute("data-zone", VANCOUVER);
   await expect(page.getByTestId("canada-badge")).toBeVisible();
-  await expect(canada).toHaveText("🏠");
+  await expect(canada).toHaveText("🇦🇺");
   await expect(page.getByTestId("day-2026-10-14")).toHaveAttribute("data-selected", "true");
   await expect(page.getByTestId("ampm-pm")).toHaveAttribute("aria-pressed", "true");
   await expect(app(page)).toHaveAttribute("data-phase", "golden");
@@ -219,7 +222,7 @@ test("10am is morning", async ({ page }) => {
   await expect(app(page)).toHaveAttribute("data-phase", "morning");
 });
 
-test("🔄 returns to live local time", async ({ page }) => {
+test("🔄 returns to live Sydney time", async ({ page }) => {
   await open(page);
   await page.getByTestId("day-2026-10-03").click();
   await page.getByTestId("ampm-pm").click();

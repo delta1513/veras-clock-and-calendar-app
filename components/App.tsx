@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  SYDNEY,
   VANCOUVER,
   addMonths,
   digitalTime,
@@ -12,7 +13,7 @@ import {
   wallKey,
   type Wall,
 } from "@/lib/time";
-import { useLocalZone, useNow } from "@/lib/useNow";
+import { useNow } from "@/lib/useNow";
 import Calendar from "./Calendar";
 import DayBar from "./DayBar";
 import Clock, { type Hand } from "./Clock";
@@ -21,19 +22,18 @@ import Sky from "./Sky";
 
 export default function App() {
   const now = useNow();
-  const local = useLocalZone();
 
   /** The frozen instant, or null while the clock is live. */
   const [frozen, setFrozen] = useState<number | null>(null);
   const [vancouver, setVancouver] = useState(false);
   const [activeHand, setActiveHand] = useState<Hand>("hour");
 
-  if (now === null || local === null) {
+  if (now === null) {
     // Static build: nothing to show until the browser knows the time.
     return <Sky phase="night" />;
   }
 
-  const zone = vancouver ? VANCOUVER : local;
+  const zone = vancouver ? VANCOUVER : SYDNEY;
   const instant = frozen ?? now;
   const wall = wallInZone(instant, zone);
   const live = frozen === null;
@@ -196,12 +196,12 @@ export default function App() {
             type="button"
             data-testid="btn-canada"
             data-vancouver={vancouver}
-            aria-label={vancouver ? "home" : "Vancouver"}
+            aria-label={vancouver ? "Sydney" : "Vancouver"}
             aria-pressed={vancouver}
             onClick={toggleZone}
             className="action-btn action-canada h-[4.5rem] rounded-3xl text-4xl"
           >
-            {vancouver ? "🏠" : "🇨🇦"}
+            {vancouver ? "🇦🇺" : "🇨🇦"}
           </button>
           <button
             type="button"

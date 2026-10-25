@@ -1,7 +1,6 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { localZone } from "./time";
 
 /*
  * The current time, to the whole second, as an external store. The static
@@ -34,11 +33,4 @@ function readNow() {
 /** Epoch ms of the current second, or null before the page runs in a browser. */
 export function useNow(): number | null {
   return useSyncExternalStore(subscribeNow, readNow, () => null);
-}
-
-const noSubscribe = () => () => {};
-
-/** The device's IANA zone, or null during the static build. */
-export function useLocalZone(): string | null {
-  return useSyncExternalStore(noSubscribe, localZone, () => null);
 }
