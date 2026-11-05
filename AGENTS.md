@@ -82,6 +82,7 @@ The app is one screen. Nothing is in a menu. On a landscape tablet, the calendar
 ### Digital time
 
 - A digital time is above the analogue clock, for example `☀️ 8:30 AM` or `🌙 8:30 PM`. The person who gets Vera's photo can read it easily.
+- The same box has the date above the time: short day name, day of the month, and short month, for example `Thu 15 Oct` (`data-testid="digital-date"`). So one place on the screen shows the exact date and time.
 - It is read-only. It does not respond to touch.
 - It shows the same time as the clock: live, frozen, or Vancouver. The ☀️ or 🌙 matches the AM/PM switch.
 - While the time is live, the colon blinks slowly. When the time is frozen, the colon is still.

@@ -4,6 +4,9 @@ import { useState } from "react";
 import {
   SYDNEY,
   VANCOUVER,
+  MONTHS,
+  WEEKDAYS,
+  weekdayOf,
   addMonths,
   digitalTime,
   hour12,
@@ -138,19 +141,30 @@ export default function App() {
                 data-testid="digital-time"
                 data-live={live}
                 aria-label={digitalTime(wall)}
-                className="digital flex items-center justify-center gap-1.5 rounded-2xl px-2 py-1.5 roomy:gap-2.5 roomy:rounded-3xl roomy:py-2.5"
+                className="digital flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-1.5 roomy:gap-1.5 roomy:rounded-3xl roomy:py-2.5"
               >
-                <span aria-hidden className="text-xl roomy:text-3xl">
-                  {pm ? "🌙" : "☀️"}
+                {/* Day name, day of the month and short month: one place for the exact date. */}
+                <span
+                  aria-hidden
+                  data-testid="digital-date"
+                  className="digital-digits text-lg leading-none font-extrabold whitespace-nowrap roomy:text-3xl"
+                >
+                  {WEEKDAYS[weekdayOf(wall.year, wall.month, wall.day)].slice(0, 3)} {wall.day}{" "}
+                  {MONTHS[wall.month - 1].slice(0, 3)}
                 </span>
-                <span aria-hidden className="digital-digits text-[1.75rem] leading-none font-black tabular-nums roomy:text-5xl">
-                  {hour12(wall)}
-                  <span className={live ? "digital-colon-live" : ""}>:</span>
-                  {String(wall.minute).padStart(2, "0")}
-                </span>
-                <span aria-hidden className="digital-digits text-base leading-none font-extrabold roomy:text-2xl">
-                  {pm ? "PM" : "AM"}
-                </span>
+                <div className="flex items-center justify-center gap-1.5 roomy:gap-2.5">
+                  <span aria-hidden className="text-xl roomy:text-3xl">
+                    {pm ? "🌙" : "☀️"}
+                  </span>
+                  <span aria-hidden className="digital-digits text-[1.75rem] leading-none font-black tabular-nums roomy:text-5xl">
+                    {hour12(wall)}
+                    <span className={live ? "digital-colon-live" : ""}>:</span>
+                    {String(wall.minute).padStart(2, "0")}
+                  </span>
+                  <span aria-hidden className="digital-digits text-base leading-none font-extrabold roomy:text-2xl">
+                    {pm ? "PM" : "AM"}
+                  </span>
+                </div>
               </div>
 
               <div className="relative">
